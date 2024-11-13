@@ -12,6 +12,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = ["beautifulsoup4"]
 
 [project.urls]
 Homepage = "https://github.com/am009/llvm-cov-html-diff"
