@@ -1,6 +1,7 @@
-import os
+import os,sys
 from .diff_line_coverage import diff_line_coverage
 from .diff_main_report import diff_main_report
+import traceback
 
 def diff_full_report(old_path, new_path, out_path):
 
@@ -9,6 +10,7 @@ def diff_full_report(old_path, new_path, out_path):
         print(f"Processing main report.")
         diff_main_report(join_index(old_path), join_index(new_path), join_index(out_path))
     except:
+        traceback.print_exc()
         print(f"Error occurred, to debug or reproduce, run:")
         print(f"python3 -m llvmcovdiff.diff_main_report {join_index(old_path)} {join_index(new_path)} {join_index(out_path)}\n")
 
@@ -27,6 +29,7 @@ def diff_full_report(old_path, new_path, out_path):
                     print(f"Processing: {rel_path}", file=sys.stderr)
                     diff_line_coverage(old_file, new_file, result_file)
                 except:
+                    traceback.print_exc()
                     print(f"Error occurred, to debug or reproduce, run:")
                     print(f"python3 -m llvmcovdiff.diff_line_coverage {old_file} {new_file} {result_file}\n")
 
