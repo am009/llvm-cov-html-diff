@@ -7,11 +7,17 @@ This tool allows you to inspect and debug fuzzbench results to know why one fuzz
 
 ## Usage
 
-1. Clone the repo.
+1. Install the tool: `pip install llvmcovdiff`
 2. Use the tool.
 
 ```
-python full_report_diff.py <old_report_folder> <new_report_folder> <output_report_folder>
+python -m llvmcovdiff <old_report_folder> <new_report_folder> <output_report_folder>
+```
+
+For example, for a fuzzbench result:
+
+```
+python -m llvmcovdiff ./2024-05-13-new-cov/coverage/reports/proj4_proj_crs_to_crs_fuzzer/aflplusplus/ ./2024-05-13-new-cov/coverage/reports/proj4_proj_crs_to_crs_fuzzer/afl/ out3
 ```
 
 ## Develop
