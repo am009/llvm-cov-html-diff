@@ -1,8 +1,5 @@
-import re,os
-from dataclasses import dataclass
-from bs4 import BeautifulSoup
+import os
 import argparse
-from collections import defaultdict
 
 script_path = os.path.realpath(__file__)
 script_dir = os.path.dirname(script_path)

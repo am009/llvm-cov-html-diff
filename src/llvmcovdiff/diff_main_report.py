@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 import argparse
 
 parser = argparse.ArgumentParser(
-    prog="llvm-codecov-diff",
-    description="A html diff generator for llvm html coverage reports",
+    prog="llvmcovdiff",
+    description="A html diff generator for llvm-cov html coverage reports",
 )
 # main report html
 parser.add_argument("old")
