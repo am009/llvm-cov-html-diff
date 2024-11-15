@@ -99,8 +99,25 @@ def diff_line_coverage(old_path, new_path, out_path):
         border: 1px solid black;
         padding: 2px;
     }
+    .floating-button-div {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .fb {
+        border: none;
+        padding: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0px 0px 4px 4px rgba(0,0,0,0.5);
+    }
     </style>
     </head><body>
+    <div class="floating-button-div">
+        <button class="fb" onclick="scrollPrev()">Prev</button>
+        <button class="fb" onclick="scrollNext()">Next</button>
+    </div>
     """
     html += "<table><thead>"
     # line no is same
@@ -124,10 +141,36 @@ def diff_line_coverage(old_path, new_path, out_path):
         if no_count:
             html += f'<td style="font-weight: bold; font: monospace;"></td>'
         else:
-            html += f'<td style="font-weight: bold; font: monospace; { "" if no_count else get_color(old_count, new_count) }"> {to_sized(old_count)} &rarr; {to_sized(new_count)} </td>'
+            html += f'<td class="{"" if no_count or get_color(old_count, new_count) == "color: #ccc;" else "hascolor" }" style="font-weight: bold; font: monospace; { "" if no_count else get_color(old_count, new_count) }"> {to_sized(old_count)} &rarr; {to_sized(new_count)} </td>'
         html += f'<td style="font-weight: bold; font: monospace;">{new_source}</td>'
         html += "</tr>"
-    html += "</tbody></table></body></html>"
+    html += """</tbody></table></body>
+    <script>
+    var importantLines = []
+    var allTds = document.body.getElementsByTagName("td");
+    for (i = 0; i<allTds.length; i++){
+        div=allTds[i];
+        if(div.classList.contains("hascolor")){
+            importantLines.push(div);
+        }
+    }
+    var current = 0;
+    function scrollNext() {
+        if (current >= importantLines.length) return;
+        if (current < 0) return;
+        importantLines[current].scrollIntoView();
+        current++;
+        if (current >= importantLines.length) current = importantLines.length - 1;
+    }
+    function scrollPrev() {
+        if (current >= importantLines.length) return;
+        if (current < 0) return;
+        importantLines[current].scrollIntoView();
+        current--;
+        if (current < 0) current = 0;
+    }
+    </script>
+    </html>"""
 
     if out_path is None:
         print(html)
