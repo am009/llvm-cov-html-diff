@@ -23,7 +23,7 @@ python -m llvmcovdiff ./2024-05-13-new-cov/coverage/reports/proj4_proj_crs_to_cr
 ## Develop
 
 ```
-python3 -m build && python3 -m pip install ./dist/llvmcovdiff-0.0.1.tar.gz
+python3 -m build && python3 -m pip install ./dist/llvmcovdiff-0.0.2.tar.gz
 ```
 
 <!-- python3 -m twine upload ./dist/* -->

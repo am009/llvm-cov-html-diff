@@ -9,6 +9,8 @@ def diff_full_report(old_path, new_path, out_path):
     try:
         print(f"Processing main report.")
         diff_main_report(join_index(old_path), join_index(new_path), join_index(out_path))
+    except KeyboardInterrupt:
+        raise
     except:
         traceback.print_exc()
         print(f"Error occurred, to debug or reproduce, run:")
@@ -28,6 +30,8 @@ def diff_full_report(old_path, new_path, out_path):
                 try:
                     print(f"Processing: {rel_path}", file=sys.stderr)
                     diff_line_coverage(old_file, new_file, result_file)
+                except KeyboardInterrupt:
+                    raise
                 except:
                     traceback.print_exc()
                     print(f"Error occurred, to debug or reproduce, run:")

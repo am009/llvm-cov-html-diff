@@ -22,8 +22,8 @@ def diff_line_coverage(old_path, new_path, out_path):
     old_lines = old_html.find_all("tr")
     new_lines = new_html.find_all("tr")
 
-    old_headers = [td.text.strip() for td in old_lines[0].find_all("td")]
-    new_headers = [td.text.strip() for td in new_lines[0].find_all("td")]
+    old_headers = [td.text.replace('(jump to first uncovered line)', '').strip() for td in old_lines[0].find_all("td")]
+    new_headers = [td.text.replace('(jump to first uncovered line)', '').strip() for td in new_lines[0].find_all("td")]
     assert old_headers == new_headers, "Headers do not match"
     headers = old_headers
 
@@ -53,15 +53,16 @@ def diff_line_coverage(old_path, new_path, out_path):
         line_data = {}
         for i, (header, column) in enumerate(zip(headers, cells)):
             header = header.strip()
+            text = column.text.strip()
             if header == 'Line':
-                line_no = int(column.text.strip())
+                line_no = int()
             elif header == 'Count':
-                if len(column.text.strip()) == 0:
+                if len(text) == 0:
                     line_data['Count'] = None
                 else:
-                    line_data['Count'] = parse_count(column.text.strip())
+                    line_data['Count'] = parse_count(text)
             elif header == 'Source (jump to first uncovered line)' or header == 'Source':
-                line_data['Source'] = column.text.strip()
+                line_data['Source'] = column.text
             else:
                 assert False, f"Unknown header: {header}"
         return line_no, line_data
@@ -131,7 +132,7 @@ def diff_line_coverage(old_path, new_path, out_path):
         old_line_no, old_count, old_source = old_data
         new_line_no, new_count, new_source = new_data
         assert old_line_no == new_line_no, "Line numbers do not match"
-        assert old_source == new_source, "Source code does not match"
+        assert old_source.strip() == new_source.strip(), "Source code does not match"
         no_count = False
         if old_count is None:
             no_count = True
@@ -142,7 +143,7 @@ def diff_line_coverage(old_path, new_path, out_path):
             html += f'<td style="font-weight: bold; font: monospace;"></td>'
         else:
             html += f'<td class="{"" if no_count or get_color(old_count, new_count) == "color: #ccc;" else "hascolor" }" style="font-weight: bold; font: monospace; { "" if no_count else get_color(old_count, new_count) }"> {to_sized(old_count)} &rarr; {to_sized(new_count)} </td>'
-        html += f'<td style="font-weight: bold; font: monospace;">{new_source}</td>'
+        html += f'<td style="white-space: pre; font: monospace;">{new_source}</td>'
         html += "</tr>"
     html += """</tbody></table></body>
     <script>
@@ -156,18 +157,20 @@ def diff_line_coverage(old_path, new_path, out_path):
     }
     var current = 0;
     function scrollNext() {
-        if (current >= importantLines.length) return;
-        if (current < 0) return;
-        importantLines[current].scrollIntoView();
+        if (current >= importantLines.length) {
+            current = importantLines.length - 1;
+        }
+        if (current === (importantLines.length - 1)) return;
         current++;
-        if (current >= importantLines.length) current = importantLines.length - 1;
+        importantLines[current].scrollIntoView();
     }
     function scrollPrev() {
-        if (current >= importantLines.length) return;
-        if (current < 0) return;
-        importantLines[current].scrollIntoView();
+        if (current < 0) {
+            current = 0;
+        }
+        if (current === 0) return;
         current--;
-        if (current < 0) current = 0;
+        importantLines[current].scrollIntoView();
     }
     </script>
     </html>"""
