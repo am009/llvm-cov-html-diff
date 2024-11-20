@@ -55,7 +55,7 @@ def diff_line_coverage(old_path, new_path, out_path):
             header = header.strip()
             text = column.text.strip()
             if header == 'Line':
-                line_no = int()
+                line_no = int(text)
             elif header == 'Count':
                 if len(text) == 0:
                     line_data['Count'] = None
